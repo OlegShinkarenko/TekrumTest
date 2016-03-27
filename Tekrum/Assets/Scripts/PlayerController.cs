@@ -4,28 +4,37 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-    private float jumpForce;
-    private float startSpeed;
-    private float speedRun;
-    public static float speedWallk;
+    public static float jumpForce = 1;
+    public static float startJump; 
+    public static float startSpeed = 1;
+    public static float speedRun = 1;
+    public static float speedWallk = 1;
+    public static float running;
+    
+    public Slider enduranceSlider;
+    public Slider wallk;
+    public Slider run;
+    public Slider jump;
 
     private Rigidbody playerRigidbody;
     private Vector3 movemant;
-    public Slider enduranceSlider;
 
     private string horizontal = "Horizontal";
     private string vertical = "Vertical";
     
     private bool touchingPlatform;
-    private float running;
     private float endurance;
     private bool flag;
 
-    void Awake() {
+    void Start() {
+        wallk.value = PlayerPrefs.GetFloat("WallkSpeed");
+        run.value = PlayerPrefs.GetFloat("RunSpeed");
+        jump.value = PlayerPrefs.GetFloat("JumpForce");
         playerRigidbody = GetComponent<Rigidbody>();
     }
 
 	void Update () {
+        startJump = 1;
         float h = Input.GetAxisRaw(horizontal);
         float v = Input.GetAxisRaw(vertical);
         Move(h, v);
@@ -82,10 +91,11 @@ public class PlayerController : MonoBehaviour {
     {
         running = newSpeed;
     }
-    
-    public void WallkSpeed(float newSpeed)
+
+    public void WallkSpeed(float newSpeedWallk)
     {
-        speedWallk = newSpeed; 
+        speedWallk = newSpeedWallk;
+
     }
 
     public void JumpForce(float newForse)
