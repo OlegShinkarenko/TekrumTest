@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
-    float jumpForce = 100f;
-    float startSpeed = 1f;
-    float speedRun;
-    float speedWallk = 2f;
+    private float jumpForce;
+    private float startSpeed;
+    private float speedRun;
+    public static float speedWallk;
 
     private Rigidbody playerRigidbody;
     private Vector3 movemant;
@@ -15,36 +15,54 @@ public class PlayerController : MonoBehaviour {
 
     private string horizontal = "Horizontal";
     private string vertical = "Vertical";
-    private string space = "space";
     
     private bool touchingPlatform;
     private float running;
     private float endurance;
+    private bool flag;
 
     void Awake() {
         playerRigidbody = GetComponent<Rigidbody>();
     }
-	
+
 	void Update () {
         float h = Input.GetAxisRaw(horizontal);
         float v = Input.GetAxisRaw(vertical);
         Move(h, v);
+        Jump();
         speedRun = speedWallk * running;
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            flag = true;
             startSpeed = speedRun;
             enduranceSlider.value--;
+            if (enduranceSlider.value == 0)
+            {
+                startSpeed = speedWallk;
+                flag = false;
+            }  
         }
         else
             startSpeed = speedWallk;
-
-        if (touchingPlatform && Input.GetKeyDown(space))
-        {
-               playerRigidbody.velocity = Vector2.zero;
-               playerRigidbody.AddForce(Vector2.up * jumpForce);
-               touchingPlatform = false;
-        }
+        if (!flag)
+        StartCoroutine(Enum());
 	}
+
+    IEnumerator Enum() {
+        yield return new WaitForSeconds(0.1f); 
+            enduranceSlider.value += 0.1f;
+    }
+        
+    
+
+    void Jump() {
+        if (touchingPlatform && Input.GetKeyDown(KeyCode.Space))
+        {
+            playerRigidbody.velocity = Vector2.zero;
+            playerRigidbody.AddForce(Vector2.up * jumpForce);
+            touchingPlatform = false;
+        }
+    }
 
     void Move(float h, float v) {
         movemant.Set(h, 0, v);
@@ -64,9 +82,20 @@ public class PlayerController : MonoBehaviour {
     {
         running = newSpeed;
     }
-
+    
     public void WallkSpeed(float newSpeed)
     {
         speedWallk = newSpeed; 
     }
+
+    public void JumpForce(float newForse)
+    {
+        jumpForce = newForse; 
+    }
+
+    public void Endurance(float newEndurance) 
+    {
+        endurance = newEndurance;
+    }
+
 }
