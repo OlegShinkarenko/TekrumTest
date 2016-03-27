@@ -13,6 +13,11 @@ public class ButtonController : MonoBehaviour {
         SceneManager.LoadScene("Menu");
     }
 
+    public void SecondTest()
+    {
+        SceneManager.LoadScene("SecondTest");
+    }
+
     public void Exit() {
         Application.Quit();
     }
